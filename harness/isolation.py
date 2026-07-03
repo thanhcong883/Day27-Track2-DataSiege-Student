@@ -40,6 +40,8 @@ class IsolatedRun:
     def __init__(self, defense_path, baseline_path, ground_truth_by_key, budget, timeout_s=30):
         self.toolkit = ServerToolkit(ground_truth_by_key, budget)
         clean_env = {"PATH": os.environ.get("PATH", "")}  # no PYTHONPATH, no inherited extras
+        if sys.platform == "win32" and "SYSTEMROOT" in os.environ:
+            clean_env["SYSTEMROOT"] = os.environ["SYSTEMROOT"]
         # child's cwd is intentionally harness/, not the caller's cwd — pass absolute paths
         defense_abspath = str(Path(defense_path).resolve())
         baseline_abspath = str(Path(baseline_path).resolve())
